@@ -44,7 +44,7 @@ Enigma::Enigma(int argc, char *argv[]) {
 	error = 0;
 	plugboard = NULL;
 	reflector = NULL;
-	*rotor = NULL;
+	rotor = NULL;
 	number_of_rotors = 0;
 
 	if (argc == 0 || argc == 1 || argc == 2) /* Check if the file is missing config for plugboard/ reflectors/ rotor pos */
