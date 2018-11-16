@@ -1,7 +1,7 @@
 /* Rotor maps to the one on the left during input 
 and to the one on the right during output */
 
-/* also maps to rotors via notch */
+/* also determines of other rotors via notch */
 
 #ifndef ROTOR_H
 #define ROTOR_H
@@ -26,7 +26,7 @@ public:
 	Rotor(string filename);
 	~Rotor(); /* Deconstructor */
 
-	friend int set_rotor_position(Rotor **rotor, int number_of_rotors, string filename);
+	friend int set_rotor_position(Rotor **rotor, int number_of_rotors, const char *filename);
 	int encrypt_right(const int &letter); /* Right to left */
 	int encrypt_left(const int &letter); /* Left to right */
 	void rotate();

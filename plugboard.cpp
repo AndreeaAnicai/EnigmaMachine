@@ -23,16 +23,32 @@ NO_ERROR                                  0
 
 
 #include "plugboard.h"
-
 using namespace std;
 
-Plugboard::Plugboard(string filename){
+/*
+int main(){
+
+	string filename;
+	filename = "plugboards/I.pb";
+	Plugboard *plugboard;
+	plugboard = new Plugboard(filename);
+
+	int letter = 5, letter_e;
+	for(int i=0; i<26; i++)
+		cout<< "mapping[" << i << "]= " << plugboard->mapping[i] << endl;
+	letter_e = plugboard->encrypt(letter);
+	cout << "return of pb encryption " << letter_e << endl;
+
+	return 0;
+}
+*/
+
+Plugboard::Plugboard(string filename) {
 	error = 0;
 
 	/* Initialise plugboard to baseline configuration */
-	for (int i=0; i<26; i++){
+	for (int i=0; i<26; i++)
 		mapping[i] = i;
-	}
 
 	ifstream in_stream;
 	in_stream.open(filename);
@@ -41,46 +57,60 @@ Plugboard::Plugboard(string filename){
 	if (in_stream.fail())
 		error = 11; 
 
-	string number;
-	int input = 0, output = 0, count = 0;
+	int input, output, count = 0;
 
-	while ( (in_stream >> number) && (error == 0) ) {
+	/*
+
+	if (! (in_stream >> input) ) {
+		cerr << "Non-numeric character for mapping in plugboard file 1 " << filename << endl;
+		error = 4; 
+	}
+	while (!in_stream.eof() && (error == 0)) {
 		
-		count++; /* Count the input pairs */
+		count++; // Count the input pairs 
 		if (count > 13) 
 			error = 6; 
-      	if (!check_if_number(number)) /* Verify if digit */
-			error = 4; 
-
-		input = stoi(number); /* Change 1st number from string to int */
-
-	  	if (!(input >= 0 && input<= 25)) /* Verify range */
+	  	if (!(input >= 0 && input<= 25)) // Verify range 
 			error = 3; 
-		if (mapping[input] != input) /* Check if letter has been previously configured */
+		if (mapping[input] != input) // Check if letter has been previously configured 
 	  		error = 5; 
-		if (!(in_stream >> number)) /* Read the 2nd number in the pair / check it exists */
-	  		error = 6;
-		if (!check_if_number(number)) /* Verify if digit */
-	  		error = 4; 
 
-	  	output = stoi (number); /* Change 2nd number from string to int */
-
-	  	if (!(output >= 0 && output<= 25))  /* Verify range */
-			error = 3; 
-	 	if (mapping[output] != output) /* Check if letter has been previously configured */
+	  	if(error == 0)	{
+			if (!(in_stream >> output)) // Read the 2nd number in the pair / check it exists 
+	  			error = 6;
+	  		if (!(output >= 0 && output<= 25))  // Verify range 
+				error = 3; 
+	 		if (mapping[output] != output) // Check if letter has been previously configured 
 	    		error = 5; 
-	 	else if (input == output) /* Check if letter connects to itself */
-	    			error = 5; 
-	  	else { 
-	    	mapping[input] = output; /* Swap numbers' configuration */
-	    	mapping[output] = input;
+	 		else if (input == output) // Check if letter connects to itself 
+	    		error = 5; 
+	  		else { 
+	    		mapping[input] = output; // Swap numbers' configuration 
+	    		mapping[output] = input;
 	  			}
-    }
+	  	}
+	  	if (in_stream >> input);
+	  	else if (! (in_stream.eof()) )  {
+	  		cerr << "Non-numeric character for mapping in plugboard file 2 " << filename << endl;
+			error = 4; 
+	  	)
+
+    }*/
+
+    	while (!in_stream.eof() && (error == 0)) {
+    		count++; 
+
+    		in_stream >> input; 
+    		in_stream >> output;
+
+	  		mapping[input] = output; 
+	    	mapping[output] = input;
+	    }
 
 	in_stream.close();
 }
 
-int Plugboard::encrypt(const int &letter){
+int Plugboard::encrypt(const int &letter) {
 	return mapping[letter];
 }
 

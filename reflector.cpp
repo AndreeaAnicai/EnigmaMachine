@@ -18,8 +18,26 @@ NO_ERROR                                  0
 
 
 #include "reflector.h"
-
 using namespace std;
+
+/*
+int main(){
+
+	string filename;
+	filename = "reflectors/I.rf";
+	Reflector *reflector;
+	reflector = new Reflector(filename);
+
+	int letter = 5, letter_e;
+	for(int i=0; i<26; i++)
+		cout<< "mapping[" << i << "]= " << reflector->mapping[i] << endl;
+	letter_e = reflector->encrypt(letter);
+	cout << "return of rf encryption " << letter_e << endl;
+
+	return 0;
+}
+*/
+
 
 Reflector::Reflector(string filename) {
 	error = 0;
@@ -33,42 +51,52 @@ Reflector::Reflector(string filename) {
   	if (in_stream.fail()) /* Check filename can be opened */
 		error = 11; 
 
-	string number;
-	int input = 0, output = 0, count = 0;
+	int input, output, count = 0;
 
-	while ( (in_stream >> number) && (error == 0) && (count <= 13) ) {
-		count++; /* Count the input pairs */
-      	if (!check_if_number(number)) /* Verify input */
-			error = 4;
+	/*
 
-		input = stoi(number); /* Change 1st number from string to int */
+	if (!(in_stream >> input)) {
+		cerr << "Non-numeric character for mapping in reflector file 1" << filename << endl;
+		error = 4; 
+	}
+	while ( (!in_stream.eof()) && (error == 0) && (count <= 13) ) {
+		count++; // Count the input pairs 
 
-		if (!(input>= 0 && input <= 25)) /* Verify range */
+		if (!(input>= 0 && input <= 25)) // Verify range 
 			error = 3; 
-		if (mapping[input] != input) /* Check if letter has been previously configured */
+		if (mapping[input] != input) // Check if letter has been previously configured 
 	  		error = 9; 
-		if (!(in_stream >> number)) /* Read the 2nd number in the pair / check it exists */
-	  		error = 10; 	
-		if (!check_if_number(number)) /* Verify if digit */
-	  		error = 4; 
 
-	  	output = stoi (number); /* Change 2nd number from string to int */
-			
-	  	if (!(output >= 0 && output <= 25)) /* Verify range */
-			error = 3; 
-	 	if (mapping[output] != output) /* Check if letter has been previously configured */
-	    	error = 9;
-	 	else if (input == output) /* Check if letter connects to itself */
+	  	if (error == 0) {
+			if (!(in_stream >> output)) // Read the 2nd number in the pair / check it exists 
+	  			error = 10; 		
+	  		if (!(output >= 0 && output <= 25)) // Verify range 
+				error = 3; 
+	 		if (mapping[output] != output) // Check if letter has been previously configured 
+	    		error = 9;
+	 		else if (input == output) // Check if letter connects to itself 
 	    		error = 9; 
-	  	else {	
-	    	mapping[input] = output; /* Swap numbers */
-	    	mapping[output] = input;
+	  		else {	
+	    		mapping[input] = output; // Swap numbers 
+	    		mapping[output] = input;
 	  		}
+	  	}
+	  	if (in_stream >> input);
+	  	else if (! (in_stream.eof()) )  {
+	  		cerr << "Non-numeric character for mapping in plugboard file 2 " << filename << endl;
+			error = 4; 
+	  	}
     }
+    */
+    while (!in_stream.eof() && (error == 0)) {
+    	count++; 
+    		
+    	in_stream >> input; 
+    	in_stream >> output;
 
-    /* Check if reflector configuration is correct */
-    if (count != 13) 
-    	error = 10;
+	  	mapping[input] = output; 
+	    mapping[output] = input;
+	}
 
 in_stream.close();
 

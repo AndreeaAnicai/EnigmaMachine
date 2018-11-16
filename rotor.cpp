@@ -20,14 +20,34 @@ NO_ERROR                                  0                               0
 */
 
 #include "rotor.h"
-
 using namespace std;
+
+/*
+int main(){
+
+	string filename;
+	filename = "rotors/I.rot";
+	Rotor *rotor;
+	rotor = new Rotor(filename);
+	for(int i=0; i<26; i++) {
+		cout<< "mapping[" << i << "]= " << rotor->mapping[1][i] << endl;
+	}
+
+	int letter = 5;
+	int letter_r = rotor->encrypt_right(letter);
+	int letter_l = rotor->encrypt_left(letter);
+
+	cout<< "letter was 5 and it encrypts right to "<< letter_r << endl;
+	cout<< "letter was 5 and it encrypts left to "<< letter_l << endl;
+
+	return 0;
+}
+*/
 
 Rotor::Rotor (string filename){
 	error = 0;
 
-	/* Initialise rotor to baseline configuration */
-	for (int i=0; i<26; i++){
+	for (int i=0; i<26; i++){ /* Initialise rotor to baseline configuration */
 		mapping[0][i]=i;
 		mapping[1][i]=i;
 	}
@@ -41,82 +61,108 @@ Rotor::Rotor (string filename){
   	if (in_stream.fail()) /* Check filename can be opened */
 		error = 11; 
 
-  	string number;
-  	int input = 0;
+  	int i, j, input;
 
-  	for(int i=0; i<26 && (error == 0); i++) { /* Put first 26 numbers into the rotor mapping array */
-  		if (!(in_stream >> number))
-  			error = 7; 
-      	if (!check_if_number(number)) /* Verify if digit */
-			error = 4; 
-
-		input = stoi(number);
-
-	  	if (!(input >= 0 && input<= 25)) /* Verify range */
-			error = 3; 
-		for (int j=0; j<i; j++) { /* Check if number has already been mapped */
-			if( (i>0) && (mapping[1][j] == input) ){
-				error = 7; 
-				break;
-			}
-			else 
-				mapping[1][i] = input;
-		}
-
+  	/*if (in_stream >> input) {
+		cerr << "Non-numeric character for mapping in rotor file " << filename << endl;
+		error = 4; 
 	}
-	if (error == 0) { /* Put notch specifications into notch pointer array */
-		int *notch, i;
-		notch = new int[26];
-
-		for (i=0; (in_stream >> number) && (error == 0); i++) {
-      		if (!check_if_number(number)) /* Verify if digit */
-				error = 4;
-
-			input = stoi(number);
-
-	  		if (!(input >= 0 && input<= 25)) /* Verify range */
-				error = 3; 
-			for (int j=0; j<i; j++) { /* Check if number has already been mapped*/
-				if( (i>0) && (notch[j] == input)){
-					error = 7; 
-					break;
-				}
-				else {
-					notch[i] = input;
-					notch_counter++;
-				}
-			}
+  	while (!in_stream.eof() && (error == 0) && (i<26)) { // Put first 26 numbers into the rotor mapping array 
+  		i = 0;
+  		if (!(in_stream >> input)) {
+			cerr << "Non-numeric character for mapping in rotor file 1" << filename << endl;
+			error = 4; 
+  		if (!(in_stream >> input))
+  			error = 7; 
+	  	if (!(input >= 0 && input<= 25)) // Verify range 
+			error = 3; 
+		for (j=0; j<i; j++) { // Check if number has already been mapped 
+			if((i>0) && (mapping[1][j] == input) )
+				error = 7; 
 		}
+	
+		mapping[1][i] = input;
+		i++;
+	}
+	*/
+
+
+	/*
+	if (error == 0) { // Put notch specifications into notch pointer array 
+		notch = new int[26];
+		i = 0; 
+
+		while (!in_stream.eof() && (error == 0)) {
+
+			if (!(in_stream >> input)) {
+				cerr << "Non-numeric character for mapping in rotor file 2 " << filename << endl;
+				error = 4; 
+			}
+	  		if (!(input >= 0 && input<= 25)) // Verify range 
+				error = 3; 
+			for (int j=0; j<i; j++) //  Check if number has already been mapped 
+				if ((i>0) && (notch[j] == input)) {
+					error = 7; 
+				} 
+			notch_counter++;
+			notch[i] = input;
+			i++;
+		}
+
+		in_stream.close();
+
+		if (notch_counter == 0) {
+			error = 7; 
+		}
+	}
+	}
+	*/
+
+
+	for (i=0; i<26 && (error == 0); i++){
+		in_stream >> input; 
+		mapping[1][i] = input;
+	}
+
+	notch = new int[26];
+	for (i=0; (in_stream >> input) && (error == 0); i++) {
+		notch[i] = input;
+		notch_counter ++;
+	}
+
 	in_stream.close();
 
-	if (notch_counter == 0)
-		error = 7; 
-	
-	}
 }
-	int set_rotor_position(Rotor **rotor, int number_of_rotors, string filename) {
+	int set_rotor_position(Rotor **rotor, int number_of_rotors, const char *filename) {
 
-		int input;
+		int input, i;
 
 		ifstream in_stream;
 		in_stream.open(filename);
-		if (in_stream.fail()) /* Check filename can be opened */
+		if (in_stream.fail()) 
 			return 11; 
+		/*
+		for (i=0; i<number_of_rotors; i++){
 
-		string number;
-
-		for (int i=0; i<number_of_rotors; i++){
-			if (!(in_stream >> number))
-  				return 8;
-      		if (!check_if_number(number)) /* Verify if digit */
-				return 4;
-     	 	
-			input = stoi(number); /* Change 1st number from string to int */
-	  		if (!(input >= 0 && input<= 25)) /* Verify range */
+			if (in_stream >> input) {
+				cerr << "Non-numeric character for mapping in rotor file " << filename << endl;
+				error = 4; 
+			}
+			if (!(in_stream >> input))
+  				return 8;	
+	  		if (!(input >= 0 && input<= 25)) // Verify range 
 				return 3; 
   
-			rotor[i]->top_position = input; /* Set the top_position pointer of each rotor to the specified input */
+			rotor[i]->top_position = input; // Set the top_position pointer of each rotor to the specified input 
+			cout<< "top-position is set to " << rotor[i]->top_position << endl;
 		}
+		*/
+
+		for (i=0; i < number_of_rotors; i++) {
+			in_stream >> input; 
+			rotor[i]->top_position = input;
+		}
+
 		return 0;
 	}
 
@@ -133,7 +179,7 @@ Rotor::Rotor (string filename){
 	} 
 
 	void Rotor::rotate(){
-		top_position = (((top_position+1) + 26) % 26);
+		top_position = (((top_position+1) + 26 +26) % 26);
 	}
 
 	Rotor::~Rotor() {

@@ -16,10 +16,11 @@ private:
   Plugboard *plugboard;
   Reflector *reflector;
   Rotor **rotor;
-  int number_of_rotors;
 public:
+  int number_of_rotors;
   int error; /* check for error code */
-  Enigma(int argc, char *argv[]);
+  Enigma(int argc, char **argv);
+  //~Enigma(); /* Deconstructor */
   int encrypt(const int &letter);
 };
 

@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <string>
 #include <cstdlib>
+#include <cctype>
+#include <cstring>
 #include "check_input_valid.h"
 #include "errors.h"
 #include "enigma.h"
@@ -33,9 +35,9 @@ char currentChar;
 int index;
 
 cin >> ws;
-cout << "Please input message to be encoded: ";
+cout << endl << "Please input message to be encoded: ";
 
-while(cin >> currentChar){
+while(cin >> ws >> currentChar){
 	if (islower(currentChar) != 0 || isalpha(currentChar) == 0) {
 		cerr << endl << " Only uppercase letters allowed! " << endl;
 		return INVALID_INPUT_CHARACTER;
