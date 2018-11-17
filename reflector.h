@@ -5,16 +5,17 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include "utilities.h"
 #include "check_input_valid.h"
 
 using namespace std;
 
 class Reflector{
 private:
-	int mapping[26];
+	int mapping[NUM_OF_LETTERS];
 public:
-	int error; /* check for error code */
-	Reflector(string filename);
+	int error; 
+	Reflector(const char *filename);
 	int encrypt(const int &letter);
 };
 

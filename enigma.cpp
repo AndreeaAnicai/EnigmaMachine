@@ -38,20 +38,19 @@ RF <- R0 <- R1 <- R2 <- PB
 using namespace std;
 
 /*
-int main(){
+int main() {
 
-	int argc = 7, index = 3;
+
+	int argc = 3, index = 3, raj;
 	char currentChar;
-	char *argv[6] = {"plugboards/IV.pb", "reflectors/I.rf", "rotors/I.rot","rotors/II.rot","rotors/III.rot", "rotors/II.pos"}; 
+	char *argv[6] = {"setup/setup.pb", "setup/setup.rf"};
+	//{"setup/setup.pb", "setup/setup.rf", "rotors/I.rot","rotors/II.rot","rotors/III.rot", "rotors/II.pos"}; 
 	Enigma *enigma; 
 	enigma = new Enigma(argc, argv);
 	
-	cout << "number of rotors = " << enigma->number_of_rotors << endl;
-	index = enigma->encrypt(index);
-
-	cout<< "index after enigma = " << index << endl;
-
-	currentChar = char(index) + 65;
+	raj = enigma->encrypt(index);
+	cout<< "index after enigma = " << raj << endl;
+	currentChar = char(raj) + 65;
 	cout << "letter is " << currentChar << endl;
 
 	return 0;
@@ -79,21 +78,22 @@ Enigma::Enigma(int argc, char **argv) {
 	if (error == 0) {
 		/**/reflector = new Reflector(argv[2]); /* 2nd parameter = reflector */
 		error = reflector->error; 
+		//cout<< "reflector argument is " << argv[2] << endl;
 		//cout<< "error reflector " << reflector->error << endl;
 
 		if (error == 0) {
-			if(argc == 4) {
+			if(argc == 4) 
 				error = 1; 
 				//cout << "error from incorrect arg " << error << endl;
-			}
 			else if (argc > 4) {
 
 				number_of_rotors = argc-4;
 				rotor = new Rotor*[argc-4];
 
 				for (i=0; (i < (argc-4) && (error == 0)); i++) {
-					rotor[i] = new Rotor(argv[i+2]);  /* 1st .rot file in argv */ 
+					rotor[i] = new Rotor(argv[i+3]);  /* 1st .rot file in argv */ 
 					error = rotor[i]->error;
+					//cout<< "argument of rotor " << i << " is " << argv[i+3] << endl;
 					//cout<< "error rotor " << i << " has error " << rotor[i]->error << endl;
 
 					
@@ -101,82 +101,64 @@ Enigma::Enigma(int argc, char **argv) {
 						for (j=0; j<=i; j++)
 		  					delete rotor[j];
 						delete [] rotor;
-	     			} 
-	     			
+	     			} 	
 	     		}
 	     		
 				if (error == 0)
-				error = set_rotor_position(rotor, argc-4, argv[argc-2]); /* argv[argc-1] - last element before input text */ 
+				error = set_rotor_position(rotor, argc-4, argv[argc-1]); /* argv[argc-1] - last element before input text */ 
 				//cout<< "Return of set position = " << error << endl;
 				
 			}
 		}
 	}
-} 	
+}
 
 int Enigma::encrypt(const int &letter) {
 
 	int i=0, j=0, letter_input;
-	//cout<< "Input letter index = "<< letter << endl;
-
-	/* Rotate the right most rotor before 1st encoding */
-	if (number_of_rotors > 0) {
+	char currentChar;
+	
+	if (number_of_rotors > 0) { // Rotate the right most rotor before 1st encoding 
 		rotor[number_of_rotors - 1]->rotate();
-		//cout<< "Trying to rotate rotor " <<  endl;
-
-		/* Rotate rotor to the left if rotor to the right hits notch */
-		for (i = number_of_rotors -1; i>0; i--) {
+		for (i = number_of_rotors -1; i>0; i--) { // Rotate rotor to the left if rotor to the right hits notch 
 			for (j=0; j < (rotor[i]->notch_counter); j++) {
 				if (rotor[i]->top_position == rotor[i]->notch[j])
 					rotor[i-1]->rotate();
 			}
 		}
 	}
-
-
-	/* Get encoding from plugboard if it exists */
+	// Get encoding from plugboard if it exists 
+	cout<< "0. input letter is " << char(letter + 65) << endl;
 	letter_input = plugboard->encrypt(letter);
-	//cout<< "1. Letter after first plugboard pass "<< letter_input << endl;
+	cout<< "1. letter after plugboard is " << char(letter_input + 65) << endl;
 
-	/* Pass through rotors and encode at every step */
+	
 	if (number_of_rotors > 0) {
-		//cout<< "In the if for looping over rotors " << "no rotors = " << number_of_rotors << endl;
-
-		/* Encode according to rotor top position, right to left */
+		// Encode according to rotor top position, right to left 
 		for (i = number_of_rotors-1; i>=0; i--) {
-
-			letter_input = ((letter_input + rotor[i]->top_position) + 26 + 26) % 26;
-			//cout<< "letter + tp forward "<< letter_input << " rotor " << i << endl;
-
-			letter_input = rotor[i]->encrypt_right(letter_input);
-			//cout<< "letter encrypt to right "<< letter_input << " rotor " << i << endl;
-
-			letter_input = ((letter_input - rotor[i]->top_position) + 26 +26) % 26;
-			//cout<< "letter - tp forward "<< letter_input << " rotor " << i << endl;
+			letter_input = ((letter_input + rotor[i]->top_position) + NUM_OF_LETTERS + NUM_OF_LETTERS) % NUM_OF_LETTERS;
+			letter_input = rotor[i]->shift_left(letter_input);
+			letter_input = ((letter_input - rotor[i]->top_position) + NUM_OF_LETTERS + NUM_OF_LETTERS) % NUM_OF_LETTERS;
+			cout<< "2. R-L letter after rotor " << i << " is " << char(letter_input + 65) << endl;
 		}
-
-		/* Pass through reflector and encode */
+		// Pass through reflector and encode 
 		letter_input = reflector->encrypt(letter_input);
-		//cout<< "2. Letter after reflector "<< letter_input << endl;
+		cout<< "3. letter after reflector is " << char(letter_input + 65) << endl;
 
-		if (number_of_rotors > 0) {
-
-			/* Encode according to rotor top position, left to right */
+		// Encode according to rotor top position, left to right 
+		if (number_of_rotors > 0) { 
 			for (i=0; i <= number_of_rotors-1; i++) {
-			letter_input = ((letter_input + rotor[i]->top_position) + 26 +26) % 26;
-			//cout<< "letter + tp backward "<< letter_input << " rotor " << i << endl;
-
-			letter_input = rotor[i]->encrypt_left(letter_input);
-			//cout<< "letter encrypt to left "<< letter_input << " rotor " << i << endl;
-
-			letter_input = ((letter_input - rotor[i]->top_position) + 26 +26) % 26;
-			//cout<< "letter - tp backward "<< letter_input << " rotor " << i << endl;
+			letter_input = ((letter_input + rotor[i]->top_position) + NUM_OF_LETTERS + NUM_OF_LETTERS) % NUM_OF_LETTERS;
+			letter_input = rotor[i]->shift_right(letter_input);
+			letter_input = ((letter_input - rotor[i]->top_position) + NUM_OF_LETTERS + NUM_OF_LETTERS) % NUM_OF_LETTERS;
+			currentChar = char(letter_input + 65);
+			cout<< "4. L-R letter after rotor " << i << " is " << currentChar << endl;
 			}
-		}
-
-		/* Pass through plugboard again before output */
+		}	
+		// Pass through plugboard again before output 
 		letter_input = plugboard->encrypt(letter_input);
-		//cout<< "3. letter plugboard final "<< letter_input << endl;
+		cout<< "5. letter after plugboard final " << char(letter_input + 65) << endl;
+	
 	}
 	return letter_input;
 

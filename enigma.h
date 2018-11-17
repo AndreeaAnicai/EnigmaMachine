@@ -8,6 +8,7 @@
 #include "plugboard.h"
 #include "reflector.h"
 #include "rotor.h"
+#include "utilities.h"
 #include "check_input_valid.h"
 using namespace std;
 
@@ -18,9 +19,8 @@ private:
   Rotor **rotor;
 public:
   int number_of_rotors;
-  int error; /* check for error code */
+  int error; 
   Enigma(int argc, char **argv);
-  //~Enigma(); /* Deconstructor */
   int encrypt(const int &letter);
 };
 

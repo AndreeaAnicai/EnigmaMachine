@@ -5,12 +5,11 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-
+#include <cstdlib>
 using namespace std;
 
 
 /* Check input is digit */
-bool check_if_number(const string &string);
-
+int check_input_valid(const string &filename);
 
 #endif 
