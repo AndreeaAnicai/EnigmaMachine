@@ -1,17 +1,4 @@
-/* The enigma function encrypts a message in several steps:
-- plugboard - swaps letters connected by a cable 
-- rotor - each maps the input letter to a different letter 
-- reflector - swaps letters according to specific mapping 
-
-Input:
-- int argc - number of parameters passes
-- array of c-strings w/ the values of the command line parameters 
-	- [0] enigma 
-	- [1] plugboard/IV.pb 
-	- [2] reflectors/I.rf
-	- [3] rotors/II.rot
-	- [4] rotors/I.pos
-
+/*
 Check input is well formed:
 INSUFFICIENT_NUMBER_OF_PARAMETERS         1
 INVALID_INPUT_CHARACTER                   2
@@ -37,46 +24,25 @@ RF <- R0 <- R1 <- R2 <- PB
 #include "enigma.h"
 using namespace std;
 
-/*
-int main() {
-
-
-	int argc = 3, index = 3, raj;
-	char currentChar;
-	char *argv[6] = {"setup/setup.pb", "setup/setup.rf"};
-	//{"setup/setup.pb", "setup/setup.rf", "rotors/I.rot","rotors/II.rot","rotors/III.rot", "rotors/II.pos"}; 
-	Enigma *enigma; 
-	enigma = new Enigma(argc, argv);
-	
-	raj = enigma->encrypt(index);
-	cout<< "index after enigma = " << raj << endl;
-	currentChar = char(raj) + 65;
-	cout << "letter is " << currentChar << endl;
-
-	return 0;
-}
-*/
-
-/* Initialise machine to baseline configuration */
 Enigma::Enigma(int argc, char **argv) {
 	int i, j;
 	error = 0;
 	number_of_rotors = 0;
 	plugboard = NULL;
 	reflector = NULL;
-	/*rotor = NULL*/
+	//rotor = NULL
 
-	if (argc == 0 || argc == 1 || argc == 2) /* Check if the file is missing config for plugboard/ reflectors/ rotor pos */
+	if (argc == 0 || argc == 1 || argc == 2) 
 		error = 1; 
 
 	if (error == 0) {
-	/**/plugboard = new Plugboard(argv[1]); /* 1st parameter = plugboard */
+	plugboard = new Plugboard(argv[1]); /* 1st parameter = plugboard */
 	error = plugboard->error;
 	//cout<< "error plugboard " << plugboard->error << endl;
     }
 
 	if (error == 0) {
-		/**/reflector = new Reflector(argv[2]); /* 2nd parameter = reflector */
+		reflector = new Reflector(argv[2]); /* 2nd parameter = reflector */
 		error = reflector->error; 
 		//cout<< "reflector argument is " << argv[2] << endl;
 		//cout<< "error reflector " << reflector->error << endl;
@@ -84,7 +50,6 @@ Enigma::Enigma(int argc, char **argv) {
 		if (error == 0) {
 			if(argc == 4) 
 				error = 1; 
-				//cout << "error from incorrect arg " << error << endl;
 			else if (argc > 4) {
 
 				number_of_rotors = argc-4;
