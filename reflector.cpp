@@ -22,7 +22,7 @@ Reflector::Reflector(const char *filename) {
       	count++;
       	if (count > NUM_OF_PAIRS) {
 			error = INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS;
-			cerr << "Incorrect (odd) number of parameters in reflector file reflector.rf " << filename << endl;
+			cerr << "Incorrect (odd) number of parameters in reflector file " << filename << endl;
 		}
       	else if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
 			error = INVALID_INDEX;
@@ -59,7 +59,7 @@ Reflector::Reflector(const char *filename) {
     }
     if (count != NUM_OF_PAIRS && error == 0) {
 		error = INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS;
-		cerr << "Insufficient number of mappings in reflector file " << filename << endl;
+		cerr << "Insufficient number of mappings in reflector file: " << filename << endl;
     }
 in_stream.close();
 }

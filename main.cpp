@@ -30,8 +30,7 @@ using namespace std;
 		default: break;
 	}
 	char currentChar, wrongChar;
-	vector <char> message;
-	int index, i;
+	int index;
 	cout.flush();
 	cerr.flush();
 	cin >> ws;
@@ -39,16 +38,11 @@ using namespace std;
 	while((cin >> ws >> currentChar)) {
 		if (islower(currentChar) != 0 || isalpha(currentChar) == 0) {
 			wrongChar = currentChar;
-			cerr << wrongChar << " is not a valid input character" << endl;
+			cerr << " - " << wrongChar << " is not a valid input character" << endl;
 			cerr << "Input characters must be upper case letters A-Z)!" << endl;
 			return INVALID_INPUT_CHARACTER;
 		}
-		else {
-			message.push_back(currentChar);
-		}
-	}
-	for (i=0; i<message.size(); i++) {
-		index = message[i] - ASCII_A;
+		index = currentChar - ASCII_A;
 		index = enigma.encrypt(index);
 		currentChar = char(index) + ASCII_A;
 		cout << currentChar;

@@ -19,19 +19,20 @@ Enigma::Enigma(int argc, char **argv) {
 
 	if (argc == 0 || argc == 1) 
 		error = INSUFFICIENT_NUMBER_OF_PARAMETERS; 
+		//cerr << "Insufficient number of parameters - please include configuration files for plugboard and rotor" << endl;
 
 	for (i=0; i<argc; i++) {
 		filename = argv[i];
 		if (filename.find(pb) != std::string::npos) {
 			plugboard = new Plugboard(argv[i]);
 			error = plugboard->error;
-			//cout << "plug error is " << plugboard->error << endl;
+			cout << "plug error is " << plugboard->error << endl;
 			//cout<< "plugboard argument is " << argv[i] << endl;
 		}
 		if (filename.find(rf) != std::string::npos) {
 			reflector = new Reflector(argv[i]);
 			error = reflector->error;
-			//cout << "reflec error is " << reflector->error << endl;
+			cout << "reflec error is " << reflector->error << endl;
 			//cout<< "reflector argument is " << argv[i] << endl;
 		}
 	}
@@ -43,38 +44,25 @@ Enigma::Enigma(int argc, char **argv) {
 		else if (argc > 4) {
 			number_of_rotors = argc-4;
 			rotor = new Rotor*[argc-4];
-			i = 0; j = 0;
-			while (argv[i]) {
-				if (filename.find(rot) != std::string::npos) {
-					rotor[j] = new Rotor(argv[i]);  
-					error = rotor[j]->error;
-					cout<< "argument of rotor " << j << " is " << argv[i] << endl;
-					cout<< "rotor " << j << " error is " << rotor[j]->error << endl;
-					j++;
-				}
-				i++;
-			}
-		}
-		if (error != 0) {
-			for (j=0; j<=i; j++)
-		  		delete rotor[j];
-			delete [] rotor; 	
-	    }
 
-	    /*
 			for (i=0; (i < (argc-4) && (error == 0)); i++) {
 				rotor[i] = new Rotor(argv[i+3]);  
 				error = rotor[i]->error;
 				//cout<< "argument of rotor " << i << " is " << argv[i+3] << endl;
-				//cout<< "rotor " << i << " error is " << rotor[i]->error << endl;	
-	     */
+				//cout<< "rotor " << i << " error is " << rotor[i]->error << endl;
+				if (error != 0) {
+					for (j=0; j<=i; j++)
+		  				delete rotor[j];
+					delete [] rotor;
+	     		} 	
+	     	}	
 			if (error == 0) {
 				error = set_rotor_position(rotor, argc-4, argv[argc-1]); 
 				//cout << "pos error is " << error << endl;
 			//cout<< "argument of pos " << i << " is " << argv[argc-1] << endl; 
 			//cout<< "Return of set position = " << error << endl;
 			}
-		
+		}
 	}
 }
 

@@ -1,5 +1,6 @@
 #include "rotor.h"
 using namespace std;
+int check_input_valid(const string &filename);
 
 Rotor::Rotor (const char *filename) {
 	error = 0;
@@ -51,18 +52,16 @@ Rotor::Rotor (const char *filename) {
 			cerr << input << " is not a number between 0 and 25 in rotor file " << filename << endl;
 		}
 		else {
-			/*for (j=0; j<i; j++) {
+			/*
+			for (j=0; j<i; j++) {
       			if ((i>0) && (notch[j] == input)) {
       				error = INVALID_ROTOR_MAPPING;
-      	  			cerr << "Invalid mapping of input " << notch[i] << " to output " << input << endl;
-      	  			cerr << "Output " << input << " is already mapped to from input " << notch[j] << endl;
-      	  			cerr << "in rotor positions file " << filename << endl;
+      	  			cerr << "Invalid mapping of notch " << notch[i] << "; already mapped " << endl;
+      	  			cout << "error " << error << endl; 
       			}
-      			else {*/
-      				if (error == 0) {
-      					notch[i] = input;
-						notch_counter ++;	
-      				}
+      			*/
+      				notch[i] = input;
+					notch_counter++;
       			//}
 			//}
 		}
@@ -120,18 +119,3 @@ Rotor::Rotor (const char *filename) {
 	Rotor::~Rotor() {
 		delete[] notch;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
