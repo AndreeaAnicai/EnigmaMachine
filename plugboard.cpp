@@ -31,7 +31,7 @@ Plugboard::Plugboard(const char *filename) {
       		}
      		else if (mapping[input] != input) {
 	 			error = IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
-	 			cerr << "Incorrect mapping of letter which has already been mapped in plugboard file  " << filename << endl;
+	 			cerr << "Incorrect mapping of letter which has already been mapped in plugboard file " << filename << endl;
      		}
 	 		else {
 				if (!(in_stream >> output)) {
@@ -49,8 +49,7 @@ Plugboard::Plugboard(const char *filename) {
 	  				}
 	  				else if (input == output) {
 	    				error = IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
-	    				cout << "error is " << error << endl;
-	    				cerr << "Incorrect mapping of letter to itself in plugboard file  " << filename << endl;
+	    				cerr << "Incorrect mapping of letter to itself in plugboard file " << filename << endl;
 	  				}
 	  				else {
 	    				mapping[input] = output;

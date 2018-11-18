@@ -67,7 +67,6 @@ Rotor::Rotor (const char *filename) {
       			}
       		}
 			in_stream.close();
-			cout << "notch_counter " << notch_counter << endl;
 	
 			if (notch_counter == 0) {
 				error = INVALID_ROTOR_MAPPING;

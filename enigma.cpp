@@ -18,15 +18,15 @@ Enigma::Enigma(int argc, char **argv) {
 			filename = argv[i];
 			if (filename.find(pb) != std::string::npos) {
 				plugboard = new Plugboard(argv[i]);
-				error = plugboard->error;
-				cout << "plug error is " << plugboard->error << endl;
-				//cout<< "plugboard argument is " << argv[i] << endl;
+				if (error == 0) {
+					error = plugboard->error;
+				}
 			}
 			if (filename.find(rf) != std::string::npos) {
 				reflector = new Reflector(argv[i]);
-				error = reflector->error;
-				//cout << "reflec error is " << reflector->error << endl;
-				//cout<< "reflector argument is " << argv[i] << endl;
+				if (error == 0) {
+					error = reflector->error;
+				}	
 			}
 		}
 	}
@@ -42,9 +42,6 @@ Enigma::Enigma(int argc, char **argv) {
 			for (i=0; (i < (argc-4) && (error == 0)); i++) {
 				rotor[i] = new Rotor(argv[i+3]);  
 				error = rotor[i]->error;
-				cout<< "rotor " << i << " notch_counter is  " << rotor[i]->notch_counter<< endl;
-				//cout<< "argument of rotor " << i << " is " << argv[i+3] << endl;
-				//cout<< "rotor " << i << " error is " << rotor[i]->error << endl;
 				if (error != 0) {
 					for (j=0; j<=i; j++)
 		  				delete rotor[j];
@@ -53,9 +50,6 @@ Enigma::Enigma(int argc, char **argv) {
 	     	}	
 			if (error == 0) {
 				error = set_rotor_position(rotor, argc-4, argv[argc-1]); 
-			//	cout << "pos error is " << error << endl;
-			//cout<< "argument of pos " << i << " is " << argv[argc-1] << endl; 
-			//cout<< "Return of set position = " << error << endl;
 			}
 		}
 	}
