@@ -10,7 +10,7 @@ using namespace std;
 
 Enigma::Enigma(int argc, char **argv) {
 	int i, j;
-	string filename, subs1 = ".pb", subs2 = ".rf", subs3 = ".rot", subs4 = ".pos";
+	string filename, pb = ".pb", rf = ".rf", rot = ".rot", pos = ".pos";
 	error = 0;
 	number_of_rotors = 0;
 	plugboard = NULL;
@@ -22,13 +22,13 @@ Enigma::Enigma(int argc, char **argv) {
 
 	for (i=0; i<argc; i++) {
 		filename = argv[i];
-		if (filename.find(subs1) != std::string::npos) {
+		if (filename.find(pb) != std::string::npos) {
 			plugboard = new Plugboard(argv[i]);
 			error = plugboard->error;
 			//cout << "plug error is " << plugboard->error << endl;
 			//cout<< "plugboard argument is " << argv[i] << endl;
 		}
-		if (filename.find(subs2) != std::string::npos) {
+		if (filename.find(rf) != std::string::npos) {
 			reflector = new Reflector(argv[i]);
 			error = reflector->error;
 			//cout << "reflec error is " << reflector->error << endl;
@@ -37,31 +37,44 @@ Enigma::Enigma(int argc, char **argv) {
 	}
 	if (error == 0) {
 		if (argc == 4) {
-			error = 1; 
+			error = INSUFFICIENT_NUMBER_OF_PARAMETERS; 
 			cerr << "Insufficient number of parameters!" << endl;
 		}
 		else if (argc > 4) {
 			number_of_rotors = argc-4;
 			rotor = new Rotor*[argc-4];
+			i = 0; j = 0;
+			while (argv[i]) {
+				if (filename.find(rot) != std::string::npos) {
+					rotor[j] = new Rotor(argv[i]);  
+					error = rotor[j]->error;
+					cout<< "argument of rotor " << j << " is " << argv[i] << endl;
+					cout<< "rotor " << j << " error is " << rotor[j]->error << endl;
+					j++;
+				}
+				i++;
+			}
+		}
+		if (error != 0) {
+			for (j=0; j<=i; j++)
+		  		delete rotor[j];
+			delete [] rotor; 	
+	    }
 
+	    /*
 			for (i=0; (i < (argc-4) && (error == 0)); i++) {
 				rotor[i] = new Rotor(argv[i+3]);  
 				error = rotor[i]->error;
 				//cout<< "argument of rotor " << i << " is " << argv[i+3] << endl;
-				//cout<< "rotor " << i << " error is " << rotor[i]->error << endl;
-				if (error != 0) {
-					for (j=0; j<=i; j++)
-		  				delete rotor[j];
-					delete [] rotor;
-	     		} 	
-	     	}	
+				//cout<< "rotor " << i << " error is " << rotor[i]->error << endl;	
+	     */
 			if (error == 0) {
 				error = set_rotor_position(rotor, argc-4, argv[argc-1]); 
 				//cout << "pos error is " << error << endl;
 			//cout<< "argument of pos " << i << " is " << argv[argc-1] << endl; 
 			//cout<< "Return of set position = " << error << endl;
 			}
-		}
+		
 	}
 }
 
