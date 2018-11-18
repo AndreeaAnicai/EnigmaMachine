@@ -11,31 +11,39 @@ Plugboard::Plugboard(const char *filename) {
 	in_stream.open(filename);
 	if (in_stream.fail()) {
 		error = ERROR_OPENING_CONFIGURATION_FILE; 
+		cerr << "Error opening plugboard configuration file " << filename << endl;
 	}
 	if(check_input_valid(filename) == 0) {
 		error = NON_NUMERIC_CHARACTER;
+		cerr << "Non-numeric character in plugboard file " << filename << endl;
 	}
 	   	while ((in_stream >> input) && (error == 0)) {
       		count++;
       		if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
 				error = INVALID_INDEX;
+				cerr << input << " is not a number between 0 and 25 in plugboard file " << filename << endl;
       		}
      		else if (mapping[input] != input) {
 	 			error = IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
+	 			cerr << "Incorrect mapping of letter which has already been mapped in plugboard file  " << filename << endl;
      		}
 	 		else {
 				if (!(in_stream >> output)) {
 	  				error = INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS;
+	  				cerr << "Incorrect (odd) number of parameters in plugboard file " << filename << endl;
 				}
 				else if (!(output >= 0 && output<= NUM_OF_LETTERS-1)) {
 	 				error = INVALID_INDEX;
+	 				cerr << output << " is not a number between 0 and 25 in plugboard file " << filename << endl;
 				}
 				else {
 	  				if (mapping[output] != output) {
 	    				error = IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
+	    				cerr << "Incorrect mapping of letter to more than one letter in plugboard file " << filename << endl;
 	  				}
 	  				else if (input == output) {
 	    				error = IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
+	    				cerr << "Incorrect mapping of letter to itself in plugboard file  " << filename << endl;
 	  				}
 	  				else {
 	    				mapping[input] = output;
@@ -46,8 +54,8 @@ Plugboard::Plugboard(const char *filename) {
     	}
     	if (count > NUM_OF_PAIRS) {
 			error = INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS;
+			cerr << "Incorrect number of parameters in plugboard file " << filename << endl;
     	}
-
 	in_stream.close();
 }
 

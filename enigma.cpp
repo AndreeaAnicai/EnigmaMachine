@@ -24,6 +24,7 @@ Enigma::Enigma(int argc, char **argv) {
 		if (filename.find(subs1) != std::string::npos) {
 			plugboard = new Plugboard(argv[i]);
 			error = plugboard->error;
+			//cout << "plug error is " << plugboard->error << endl;
 			//cout<< "plugboard argument is " << argv[i] << endl;
 		}
 		if (filename.find(subs2) != std::string::npos) {
