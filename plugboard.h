@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdlib>
 #include "utilities.h"
+#include "errors.h"
 #include "check_input_valid.h"
 
 using namespace std;

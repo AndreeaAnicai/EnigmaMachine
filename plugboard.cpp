@@ -1,14 +1,3 @@
-/* 
-Check input is well formed:
-INVALID_INDEX                             3
-NON_NUMERIC_CHARACTER                     4
-IMPOSSIBLE_PLUGBOARD_CONFIGURATION        5
-INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS  6
-ERROR_OPENING_CONFIGURATION_FILE          11
-NO_ERROR                                  0 
-*/
-
-
 #include "plugboard.h"
 using namespace std;
 
@@ -21,40 +10,32 @@ Plugboard::Plugboard(const char *filename) {
 	ifstream in_stream;
 	in_stream.open(filename);
 	if (in_stream.fail()) {
-		error = 11; 
-		cerr << "Input file cannot be opened" << endl;
+		error = ERROR_OPENING_CONFIGURATION_FILE; 
 	}
 	if(check_input_valid(filename) == 0) {
-		error = 4;
-		cerr << "Input file contains non-digit characters" << endl;
+		error = NON_NUMERIC_CHARACTER;
 	}
 	   	while ((in_stream >> input) && (error == 0)) {
       		count++;
       		if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
-				error = 3;
-				cerr << "Input file contains numbers not in range [0,25]" << endl;
+				error = INVALID_INDEX;
       		}
      		else if (mapping[input] != input) {
-	 			error = 5;
-	 			cerr << "Letter has already been mapped" << endl;
+	 			error = IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
      		}
 	 		else {
 				if (!(in_stream >> output)) {
-	  				error = 6;
-	  				cerr << "Input file numbers are not in pairs" << endl;
+	  				error = INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS;
 				}
 				else if (!(output >= 0 && output<= NUM_OF_LETTERS-1)) {
-	 				error = 3;
-	 				cerr << "Input file contains numbers not in range [0,25]" << endl;
+	 				error = INVALID_INDEX;
 				}
 				else {
 	  				if (mapping[output] != output) {
-	    				error = 5;
-	    				cerr << "Letter has already been mapped" << endl;
+	    				error = IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
 	  				}
 	  				else if (input == output) {
-	    				error = 5;
-	    				cerr << "Letter maps to itself" << endl;
+	    				error = IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
 	  				}
 	  				else {
 	    				mapping[input] = output;
@@ -64,8 +45,7 @@ Plugboard::Plugboard(const char *filename) {
       		}
     	}
     	if (count > NUM_OF_PAIRS) {
-			error = 6;
-			cerr << "File contains more than 13 pairs of numbers" << endl;
+			error = INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS;
     	}
 
 	in_stream.close();

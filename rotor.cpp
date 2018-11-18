@@ -1,13 +1,3 @@
-/* 
-Check input is well formed:
-INVALID_INDEX                             3
-NON_NUMERIC_CHARACTER                     4
-INVALID_ROTOR_MAPPING                     7
-NO_ROTOR_STARTING_POSITION                8
-ERROR_OPENING_CONFIGURATION_FILE          11
-NO_ERROR                                  0                               0
-*/
-
 #include "rotor.h"
 using namespace std;
 
@@ -24,27 +14,22 @@ Rotor::Rotor (const char *filename) {
 	ifstream in_stream;
   	in_stream.open(filename);
   	if (in_stream.fail()) {
-		error = 11; 
-		cerr << "Input file cannot be opened" << endl;
+		error = ERROR_OPENING_CONFIGURATION_FILE; 
   	}
 	if(check_input_valid(filename) == 0) {
-		error = 4;
-		cerr << "Input file contains non-digit characters" << endl;
+		error = NON_NUMERIC_CHARACTER;
 	}
 	for (i=0; i<NUM_OF_LETTERS && (error == 0); i++) {
 		if (!(in_stream >> input)) {
-			error = 7;
-			cerr << "Input does not contain mappings for all letters" << endl;
+			error = INVALID_ROTOR_MAPPING;
 		}
      	else if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
-			error = 3;
-			cerr << "Input file contains numbers not in range [0,25]" << endl;
+			error = INVALID_INDEX;
       	}
         else {
         	for (j=0; j<i; j++) {
       			if ((i>0) && (mapping[1][j] == input)) {
-      	  			error = 7;
-      	  			cerr << "Letter has already been mapped" << endl;
+      	  			error = INVALID_ROTOR_MAPPING;
       			}
       	  	}
       		if (error == 0) {
@@ -55,14 +40,12 @@ Rotor::Rotor (const char *filename) {
 	notch = new int[NUM_OF_LETTERS];
 	for (i=0; (in_stream >> input) && (error == 0); i++) {
 		if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
-			error = 3;
-			cerr << "Input file contains numbers not in range [0,25]" << endl;
+			error = INVALID_INDEX;
 		}
 		else {
         	for (j=0; j<i; j++) {
       			if ((i>0) && (notch[j] == input)) {
-      	  			error = 7;
-      	  			cerr << "Notch has already been assigned" << endl;
+      	  			error = INVALID_ROTOR_MAPPING;
       			}
       			if (error == 0) {
       				notch[i] = input;
@@ -75,26 +58,22 @@ Rotor::Rotor (const char *filename) {
 }
 	int set_rotor_position(Rotor **rotor, int number_of_rotors, const char *filename) {
 
-		int input, i, error;
+		int input, i;
 
 		ifstream in_stream;
 		in_stream.open(filename);
 		if (in_stream.fail()) {
-			return 11; 
-			cerr << "Input file cannot be opened" << endl;
+			return ERROR_OPENING_CONFIGURATION_FILE; 
 		}
 		if(check_input_valid(filename) == 0) {
-			error = 4;
-			cerr << "Input file contains non-digit characters" << endl;
+			return NON_NUMERIC_CHARACTER;
 		}
 		for (i=0; i < number_of_rotors; i++) {
 			if (!(in_stream >> input)) {
-				error = 8;
-				cerr << "Input does not contain rotor starting positions" << endl;
+				return NO_ROTOR_STARTING_POSITION;
 			}
 			else if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
-				error = 3;
-				cerr << "Input file contains numbers not in range [0,25]" << endl;
+				return INVALID_INDEX;
       		}
       		else {
       			rotor[i]->top_position = input;

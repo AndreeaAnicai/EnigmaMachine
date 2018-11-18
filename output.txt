@@ -1,0 +1,2 @@
+plugboard argument is setup/setup.pb
+reflector argument is setup/setup.rf

@@ -4,11 +4,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <cstdlib>
 #include "plugboard.h"
 #include "reflector.h"
 #include "rotor.h"
 #include "utilities.h"
+#include "errors.h"
 #include "check_input_valid.h"
 using namespace std;
 
