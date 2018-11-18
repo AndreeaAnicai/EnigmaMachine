@@ -69,10 +69,8 @@ while(cin >> ws >> currentChar){
 	index = currentChar - ASCII_A;
 	index = enigma.encrypt(index);
 	currentChar = char(index) + ASCII_A;
-	cout << currentChar << endl;
+	cout << currentChar;
 }
-cout << endl;
-
 return NO_ERROR;
 
 }

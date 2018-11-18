@@ -1,26 +1,10 @@
 /*
-Check input is well formed:
-INSUFFICIENT_NUMBER_OF_PARAMETERS         1
-INVALID_INPUT_CHARACTER                   2
-INVALID_INDEX                             3
-NON_NUMERIC_CHARACTER                     4
-IMPOSSIBLE_PLUGBOARD_CONFIGURATION        5
-INCORRECT_NUMBER_OF_PLUGBOARD_PARAMETERS  6
-INVALID_ROTOR_MAPPING                     7
-NO_ROTOR_STARTING_POSITION                8
-INVALID_REFLECTOR_MAPPING                 9
-INCORRECT_NUMBER_OF_REFLECTOR_PARAMETERS  10
-ERROR_OPENING_CONFIGURATION_FILE          11
-NO_ERROR 								  0
-
 Enigma machine configuration is:
 
 RF <- R0 <- R1 <- R2 <- PB  
 |
 ----> R0 -> R1 -> R2 -> output
 */
-
-
 #include "enigma.h"
 using namespace std;
 
@@ -41,12 +25,12 @@ Enigma::Enigma(int argc, char **argv) {
 		if (filename.find(subs1) != std::string::npos) {
 			plugboard = new Plugboard(argv[i]);
 			error = plugboard->error;
-			cout<< "plugboard argument is " << argv[i] << endl;
+			//cout<< "plugboard argument is " << argv[i] << endl;
 		}
 		if (filename.find(subs2) != std::string::npos) {
 			reflector = new Reflector(argv[i]);
 			error = reflector->error;
-			cout<< "reflector argument is " << argv[i] << endl;
+			//cout<< "reflector argument is " << argv[i] << endl;
 		}
 	}
 		if (error == 0) {
@@ -59,7 +43,7 @@ Enigma::Enigma(int argc, char **argv) {
 				for (i=0; (i < (argc-4) && (error == 0)); i++) {
 					rotor[i] = new Rotor(argv[i+3]);  /* 1st .rot file in argv */ 
 					error = rotor[i]->error;
-					cout<< "argument of rotor " << i << " is " << argv[i+3] << endl;
+					//cout<< "argument of rotor " << i << " is " << argv[i+3] << endl;
 					//cout<< "error rotor " << i << " has error " << rotor[i]->error << endl;
 
 					
@@ -72,7 +56,7 @@ Enigma::Enigma(int argc, char **argv) {
 	     		
 				if (error == 0)
 				error = set_rotor_position(rotor, argc-4, argv[argc-1]); /* argv[argc-1] - last element before input text */ 
-				cout<< "Return of set position = " << error << endl;
+				//cout<< "Return of set position = " << error << endl;
 				
 			}
 		}
@@ -82,8 +66,6 @@ Enigma::Enigma(int argc, char **argv) {
 int Enigma::encrypt(const int &letter) {
 
 	int i=0, j=0, letter_input;
-	char currentChar;
-	
 	if (number_of_rotors > 0) { // Rotate the right most rotor before 1st encoding 
 		rotor[number_of_rotors - 1]->rotate();
 		for (i = number_of_rotors -1; i>0; i--) { // Rotate rotor to the left if rotor to the right hits notch 
@@ -94,9 +76,7 @@ int Enigma::encrypt(const int &letter) {
 		}
 	}
 	// Get encoding from plugboard if it exists 
-	cout<< "0. input letter is " << char(letter + 65) << endl;
 	letter_input = plugboard->encrypt(letter);
-	cout<< "1. letter after plugboard is " << char(letter_input + 65) << endl;
 
 	
 	if (number_of_rotors > 0) {
@@ -105,12 +85,10 @@ int Enigma::encrypt(const int &letter) {
 			letter_input = ((letter_input + rotor[i]->top_position) + NUM_OF_LETTERS + NUM_OF_LETTERS) % NUM_OF_LETTERS;
 			letter_input = rotor[i]->shift_left(letter_input);
 			letter_input = ((letter_input - rotor[i]->top_position) + NUM_OF_LETTERS + NUM_OF_LETTERS) % NUM_OF_LETTERS;
-			cout<< "2. R-L letter after rotor " << i << " is " << char(letter_input + 65) << endl;
 		}
 	}
 	// Pass through reflector and encode 
 	letter_input = reflector->encrypt(letter_input);
-	cout<< "3. letter after reflector is " << char(letter_input + 65) << endl;
 
 		// Encode according to rotor top position, left to right 
 		if (number_of_rotors > 0) { 
@@ -118,15 +96,10 @@ int Enigma::encrypt(const int &letter) {
 				letter_input = ((letter_input + rotor[i]->top_position) + NUM_OF_LETTERS + NUM_OF_LETTERS) % NUM_OF_LETTERS;
 				letter_input = rotor[i]->shift_right(letter_input);
 				letter_input = ((letter_input - rotor[i]->top_position) + NUM_OF_LETTERS + NUM_OF_LETTERS) % NUM_OF_LETTERS;
-				currentChar = char(letter_input + 65);
-				cout<< "4. L-R letter after rotor " << i << " is " << currentChar << endl;
 			}
 		}	
 		// Pass through plugboard again before output 
 		letter_input = plugboard->encrypt(letter_input);
-		cout<< "5. letter after plugboard final " << char(letter_input + 65) << endl;
-	
 	return letter_input;
-
 }
 
