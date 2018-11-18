@@ -43,23 +43,27 @@ Rotor::Rotor (const char *filename) {
 			error = INVALID_INDEX;
 		}
 		else {
+			/*
         	for (j=0; j<i; j++) {
       			if ((i>0) && (notch[j] == input)) {
       	  			error = INVALID_ROTOR_MAPPING;
       			}
-      			if (error == 0) {
-      				notch[i] = input;
-					notch_counter ++;
-      			}
+      		*/
+      		if (error == 0) {
+      			notch[i] = input;
+				notch_counter ++;
+      			
       		}
       	}
 	}
 	in_stream.close();
+
+	if (notch_counter == 0) {
+		error = INVALID_ROTOR_MAPPING;
+	}
 }
 	int set_rotor_position(Rotor **rotor, int number_of_rotors, const char *filename) {
-
 		int input, i;
-
 		ifstream in_stream;
 		in_stream.open(filename);
 		if (in_stream.fail()) {
