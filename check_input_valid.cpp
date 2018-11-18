@@ -1,20 +1,5 @@
 #include "check_input_valid.h"
-
 using namespace std;
-
-/* Check input is digit NON_NUMERIC_CHARACTER (4) */
-
-/*
-int main() {
-
-	const char *filename;
-	filename = "plugboards/I.pb";
-	int error = check_input_valid(filename);
-	cout<< "error is " << error << endl;
-
-	return 0;
-}
-*/
 
 int check_input_valid(const string &filename) {
 
@@ -23,7 +8,7 @@ int check_input_valid(const string &filename) {
   	in_stream.open(filename);
 
   	if (!in_stream)
-  		return 1;
+  		return 0;
 
 	while (in_stream >> string)
 		for (int i=0; i< int(string.length()); i++) {

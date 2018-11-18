@@ -1,3 +1,14 @@
+/* ANDREEA ANICAI C++ ENIGMA C2
+
+The Plugboard - swaps letters' inputs before the
+rotors and after passing through the reflector and
+rotors, according to the confuguration file (ending in .pb)
+
+All letters are initially mapped to themselves and then
+changed according to the configuration file.
+
+*/
+
 #ifndef PLUGBOARD_H
 #define PLUGBOARD_H
 

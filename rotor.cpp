@@ -19,57 +19,61 @@ Rotor::Rotor (const char *filename) {
 		error = ERROR_OPENING_CONFIGURATION_FILE; 
 		cerr << "Error opening rotor configuration file " << filename << endl;
   	}
-	if(check_input_valid(filename) == 0) {
+	else if(check_input_valid(filename) == 0) {
 		error = NON_NUMERIC_CHARACTER;
 		cerr << "Non-numeric character for mapping in rotor file " << filename << endl;
+		cerr << "error is " << error << endl;
 	}
-	for (i=0; i<NUM_OF_LETTERS && (error == 0); i++) {
-		if (!(in_stream >> input)) {
-			error = INVALID_ROTOR_MAPPING;
-			cerr << "Not all inputs mapped in rotor file " << filename << endl;
-		}
-     	else if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
-			error = INVALID_INDEX;
-			cerr << input << " is not a number between 0 and 25 in rotor file " << filename << endl;
-      	}
-        else {
-        	for (j=0; j<i; j++) {
-      			if ((i>0) && (mapping[1][j] == input)) {
-      	  			error = INVALID_ROTOR_MAPPING;
-      	  			cerr << "Invalid mapping of input " << mapping[0][i] << " to output " << input << endl;
-      	  			cerr << "Output " << input << " is already mapped to from input " << mapping[0][j] << " in rotor file " << filename << endl;
-      			}
-      	  	}
-      		if (error == 0) {
-      	  		mapping[1][i] = input;
+	else {
+		for (i=0; i<NUM_OF_LETTERS && (error == 0); i++) {
+			if (!(in_stream >> input)) {
+				error = INVALID_ROTOR_MAPPING;
+				cerr << "Not all inputs mapped in rotor file " << filename << endl;
+			}
+     		else if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
+				error = INVALID_INDEX;
+				cerr << input << " is not a number between 0 and 25 in rotor file " << filename << endl;
       		}
-        }
-	}
-	notch = new int[NUM_OF_LETTERS];
-	for (i=0; (in_stream >> input) && (error == 0); i++) {
-		if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
-			error = INVALID_INDEX;
-			cerr << input << " is not a number between 0 and 25 in rotor file " << filename << endl;
-		}
-		else {
-			/*
-			for (j=0; j<i; j++) {
-      			if ((i>0) && (notch[j] == input)) {
-      				error = INVALID_ROTOR_MAPPING;
-      	  			cerr << "Invalid mapping of notch " << notch[i] << "; already mapped " << endl;
-      	  			cout << "error " << error << endl; 
+        	else {
+        		for (j=0; j<i; j++) {
+      				if ((i>0) && (mapping[1][j] == input)) {
+      	  				error = INVALID_ROTOR_MAPPING;
+      	  				cerr << "Invalid mapping of input " << mapping[0][i] << " to output " << input << endl;
+      	  				cerr << "Output " << input << " is already mapped to from input " << mapping[0][j] << " in rotor file " << filename << endl;
+      				}
+      	  		}
+      			if (error == 0) {
+      	  			mapping[1][i] = input;
       			}
-      			*/
+        	}
+		}
+		if (error == 0) {
+			notch = new int[NUM_OF_LETTERS];
+		
+			for (i=0; (in_stream >> input) && (error == 0); i++) {
+				if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
+					error = INVALID_INDEX;
+					cerr << input << " is not a number between 0 and 25 in rotor file " << filename << endl;
+				}
+				for (j=0; j<i; j++) {
+      				if ((i>0) && (notch[j] == input)) {
+      					error = INVALID_ROTOR_MAPPING;
+      	  				cerr << "Notch at position " << input << " for rotor " << i << " already mapped " << endl;
+      				}	
+      			}
+      			if (error == 0) {
       				notch[i] = input;
 					notch_counter++;
-      			//}
-			//}
+      			}
+      		}
+			in_stream.close();
+			cout << "notch_counter " << notch_counter << endl;
+	
+			if (notch_counter == 0) {
+				error = INVALID_ROTOR_MAPPING;
+				cerr << "Invalid number of notches" << endl;
+			}
 		}
-	}
-	in_stream.close();
-
-	if (notch_counter == 0) {
-		error = INVALID_ROTOR_MAPPING;
 	}
 }
 	int set_rotor_position(Rotor **rotor, int number_of_rotors, const char *filename) {

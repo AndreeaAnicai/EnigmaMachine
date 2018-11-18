@@ -1,3 +1,18 @@
+/* ANDREEA ANICAI C++ ENIGMA C2
+
+The Rotor - each maps a letter to a specific other letter - given
+in the configuration file, but they can also rotate, which changes
+the mapping to a different output. They have notches - designated 
+letters that when reaching the 12 o'clock position trigger the rotation
+of the adjacent rotor. 
+
+The rotors are mapped as a 2D array - mapping[0][] contains the outer
+letters which rotate and mapping[1][] which represents the current mapping.
+
+The top position designated the letter currently at 12 o'clock. 
+
+*/
+
 #ifndef ROTOR_H
 #define ROTOR_H
 

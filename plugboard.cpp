@@ -14,10 +14,11 @@ Plugboard::Plugboard(const char *filename) {
 		error = ERROR_OPENING_CONFIGURATION_FILE; 
 		cerr << "Error opening plugboard configuration file " << filename << endl;
 	}
-	if(check_input_valid(filename) == 0) {
-		error = NON_NUMERIC_CHARACTER;
-		cerr << "Non-numeric character for mapping in plugboard file " << filename << endl;
+	else if (check_input_valid(filename) == 0) {
+			error = NON_NUMERIC_CHARACTER;
+			cerr << "Non-numeric character for mapping in plugboard file " << filename << endl;
 	}
+	else {
 	   	while ((in_stream >> input) && (error == 0)) {
       		count++;
       		if (count > NUM_OF_PAIRS) {
@@ -48,6 +49,7 @@ Plugboard::Plugboard(const char *filename) {
 	  				}
 	  				else if (input == output) {
 	    				error = IMPOSSIBLE_PLUGBOARD_CONFIGURATION;
+	    				cout << "error is " << error << endl;
 	    				cerr << "Incorrect mapping of letter to itself in plugboard file  " << filename << endl;
 	  				}
 	  				else {
@@ -57,6 +59,7 @@ Plugboard::Plugboard(const char *filename) {
 				}
       		}
     	}
+    }
 	in_stream.close();
 }
 
