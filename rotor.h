@@ -8,7 +8,6 @@
 #include "utilities.h"
 #include "errors.h"
 #include "check_input_valid.h"
-
 using namespace std;
 
 class Rotor{
@@ -22,11 +21,11 @@ public:
 
 	Rotor(const char *filename);
 	~Rotor(); 
+	int shift_left(const int &letter); 
+	int shift_right(const int &letter); 
+	void rotate();
 
 	friend int set_rotor_position(Rotor **rotor, int number_of_rotors, const char *filename);
-	int shift_left(const int &letter); /* Right to left */
-	int shift_right(const int &letter); /* Left to right */
-	void rotate();
 };
 
 #endif

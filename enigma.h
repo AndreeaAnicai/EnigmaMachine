@@ -19,8 +19,8 @@ private:
   Plugboard *plugboard;
   Reflector *reflector;
   Rotor **rotor;
-public:
   int number_of_rotors;
+public:
   int error; 
   Enigma(int argc, char **argv);
   int encrypt(const int &letter);

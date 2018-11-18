@@ -6,30 +6,37 @@ Rotor::Rotor (const char *filename) {
 	top_position = 0;
 	notch_counter = 0;
 	notch = NULL;
-	int i, j, input;
-	for (int i=0; i<NUM_OF_LETTERS; i++){ /* Initialise rotor to baseline configuration */
+	int i, j, input = 0;
+	for (int i=0; i<NUM_OF_LETTERS; i++) {
 		mapping[0][i]=i;
 		mapping[1][i]=i;
 	}
 	ifstream in_stream;
   	in_stream.open(filename);
+
   	if (in_stream.fail()) {
 		error = ERROR_OPENING_CONFIGURATION_FILE; 
+		cerr << "Error opening rotor configuration file " << filename << endl;
   	}
 	if(check_input_valid(filename) == 0) {
 		error = NON_NUMERIC_CHARACTER;
+		cerr << "Non-numeric character for mapping in rotor file " << filename << endl;
 	}
 	for (i=0; i<NUM_OF_LETTERS && (error == 0); i++) {
 		if (!(in_stream >> input)) {
 			error = INVALID_ROTOR_MAPPING;
+			cerr << "Not all inputs mapped in rotor file " << filename << endl;
 		}
      	else if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
 			error = INVALID_INDEX;
+			cerr << input << " is not a number between 0 and 25 in rotor file " << filename << endl;
       	}
         else {
         	for (j=0; j<i; j++) {
       			if ((i>0) && (mapping[1][j] == input)) {
       	  			error = INVALID_ROTOR_MAPPING;
+      	  			cerr << "Invalid mapping of input " << mapping[0][i] << " to output " << input << endl;
+      	  			cerr << "Output " << input << " is already mapped to from input " << mapping[0][j] << " in rotor file " << filename << endl;
       			}
       	  	}
       		if (error == 0) {
@@ -41,20 +48,24 @@ Rotor::Rotor (const char *filename) {
 	for (i=0; (in_stream >> input) && (error == 0); i++) {
 		if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
 			error = INVALID_INDEX;
+			cerr << input << " is not a number between 0 and 25 in rotor file " << filename << endl;
 		}
 		else {
-			/*
-        	for (j=0; j<i; j++) {
+			/*for (j=0; j<i; j++) {
       			if ((i>0) && (notch[j] == input)) {
-      	  			error = INVALID_ROTOR_MAPPING;
+      				error = INVALID_ROTOR_MAPPING;
+      	  			cerr << "Invalid mapping of input " << notch[i] << " to output " << input << endl;
+      	  			cerr << "Output " << input << " is already mapped to from input " << notch[j] << endl;
+      	  			cerr << "in rotor positions file " << filename << endl;
       			}
-      		*/
-      		if (error == 0) {
-      			notch[i] = input;
-				notch_counter ++;
-      			
-      		}
-      	}
+      			else {*/
+      				if (error == 0) {
+      					notch[i] = input;
+						notch_counter ++;	
+      				}
+      			//}
+			//}
+		}
 	}
 	in_stream.close();
 
@@ -68,16 +79,20 @@ Rotor::Rotor (const char *filename) {
 		in_stream.open(filename);
 		if (in_stream.fail()) {
 			return ERROR_OPENING_CONFIGURATION_FILE; 
+			cerr << "Error opening rotor positions file " << filename << endl;
 		}
 		if(check_input_valid(filename) == 0) {
 			return NON_NUMERIC_CHARACTER;
+			cerr << "Non-numeric character in rotor positions file " << filename << endl;
 		}
 		for (i=0; i < number_of_rotors; i++) {
 			if (!(in_stream >> input)) {
 				return NO_ROTOR_STARTING_POSITION;
+				cerr << "No starting position for rotor " << i << "in rotor position file " << filename << endl;
 			}
 			else if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
 				return INVALID_INDEX;
+				cerr << input << " is not a number between 0 and 25 in rotor positions file " << filename << endl;
       		}
       		else {
       			rotor[i]->top_position = input;
