@@ -83,17 +83,17 @@ Rotor::Rotor (const char *filename) {
 			cerr << "Error opening rotor positions file " << filename << endl;
 		}
 		if(check_input_valid(filename) == 0) {
-			return NON_NUMERIC_CHARACTER;
 			cerr << "Non-numeric character in rotor positions file " << filename << endl;
+			return NON_NUMERIC_CHARACTER;
 		}
 		for (i=0; i < number_of_rotors; i++) {
 			if (!(in_stream >> input)) {
-				return NO_ROTOR_STARTING_POSITION;
 				cerr << "No starting position for rotor " << i << "in rotor position file " << filename << endl;
+				return NO_ROTOR_STARTING_POSITION;
 			}
 			else if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
-				return INVALID_INDEX;
 				cerr << input << " is not a number between 0 and 25 in rotor positions file " << filename << endl;
+				return INVALID_INDEX;
       		}
       		else {
       			rotor[i]->top_position = input;
