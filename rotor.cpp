@@ -88,7 +88,7 @@ Rotor::Rotor (const char *filename) {
 		}
 		for (i=0; i < number_of_rotors; i++) {
 			if (!(in_stream >> input)) {
-				cerr << "No starting position for rotor " << i << "in rotor position file " << filename << endl;
+				cerr << "No starting position for rotor " << i << " in rotor position file " << filename << endl;
 				return NO_ROTOR_STARTING_POSITION;
 			}
 			else if (!(input >= 0 && input<= NUM_OF_LETTERS-1)) {
