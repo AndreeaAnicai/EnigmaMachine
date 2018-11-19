@@ -45,7 +45,6 @@ using namespace std;
 		currentChar = char(index) + ASCII_A;
 		cout << currentChar;
 	}
-	cout << endl;
 
 	return NO_ERROR;
 
