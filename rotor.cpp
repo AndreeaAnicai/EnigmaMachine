@@ -22,7 +22,6 @@ Rotor::Rotor (const char *filename) {
 	else if(check_input_valid(filename) == 0) {
 		error = NON_NUMERIC_CHARACTER;
 		cerr << "Non-numeric character for mapping in rotor file " << filename << endl;
-		cerr << "error is " << error << endl;
 	}
 	else {
 		for (i=0; i<NUM_OF_LETTERS && (error == 0); i++) {
