@@ -31,8 +31,6 @@ using namespace std;
 	}
 	char currentChar, wrongChar;
 	int index;
-	cout.flush();
-	cerr.flush();
 	cin >> ws;
 
 	while((cin >> ws >> currentChar)) {

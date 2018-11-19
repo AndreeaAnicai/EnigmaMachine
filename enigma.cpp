@@ -58,7 +58,6 @@ Enigma::Enigma(int argc, char **argv) {
 int Enigma::encrypt(const int &letter) {
 
 	int i=0, j=0, letter_index;
-	char currentChar;
 	if (number_of_rotors > 0) { 
 		rotor[number_of_rotors - 1]->rotate();
 		for (i = number_of_rotors -1; i>0; i--) { 
@@ -83,7 +82,6 @@ int Enigma::encrypt(const int &letter) {
 				letter_index = ((letter_index + rotor[i]->top_position) + NUM_OF_LETTERS + NUM_OF_LETTERS) % NUM_OF_LETTERS;
 				letter_index = rotor[i]->shift_right(letter_index);
 				letter_index = ((letter_index - rotor[i]->top_position) + NUM_OF_LETTERS + NUM_OF_LETTERS) % NUM_OF_LETTERS;
-				currentChar = char(letter_index + 65);
 			}
 		}	 
 		letter_index = plugboard->encrypt(letter_index);
